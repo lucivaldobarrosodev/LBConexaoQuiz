@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-  <title>QuizZap! ⚡ — Aluno</title>
+  <title>LB Conexão Quiz - Aluno</title>
   <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
@@ -22,7 +22,7 @@
 
 <!-- ══ ENTRAR ══ -->
 <div id="spj" class="scr on">
-  <div class="jlogo">QuizZap! ⚡</div>
+  <div class="jlogo">LB Conexão Quiz</div>
   <div class="jcard">
     <div class="jlbl">📌 PIN da Sala</div>
     <input class="inp inp-pin" type="text" id="jpin"
@@ -53,6 +53,14 @@
 <div id="spqa" class="scr">
   <div class="pqtxt" id="pqtxt">Aguardando pergunta…</div>
   <div class="ptbar"><div class="ptfil" id="ptfil" style="width:100%"></div></div>
+  <div class="live-rank-shell">
+    <div class="live-rank-head">
+      <strong>Ranking ao vivo</strong>
+      <span id="live-rank-status">Atualizando…</span>
+    </div>
+    <div class="live-rank-self" id="live-rank-self">Sua posição aparecerá aqui.</div>
+    <div class="live-rank-list" id="live-rank-list"></div>
+  </div>
   <div class="pg" id="pg">
     <button class="pbtn A" onclick="doAns('A')">▲</button>
     <button class="pbtn B" onclick="doAns('B')">●</button>

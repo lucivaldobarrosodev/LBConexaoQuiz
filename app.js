@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════
-//  QuizZap! ⚡  —  app.js
+//  LB Conexao Quiz  —  app.js
 //  Lógica completa do jogo (Professor e Aluno)
 //  Supabase via REST pura — sem SDK, sem Web Workers
 // ═══════════════════════════════════════════════════════════
@@ -35,7 +35,12 @@ const G = {
   questions: [], timePerQ: 20, currentQ: 0, totalQ: 0,
   timer: null, pollTimer: null, timeLeft: 0,
   answered: false, prevRank: [],
+  editBankId: null, editBankName: null,
+  liveRank: [],
+  draftBound: false,
 };
+
+const DRAFT_KEY = 'quizzap_draft_v1';
 
 // ── Utilitários de UI ─────────────────────────────────────────
 function show(id) {
@@ -63,6 +68,9 @@ function toast(msg, type = 'ok') {
 function initAdmin() {
   G.role = 'admin';
   buildCards();
+  bindDraftAutosave();
+  loadDraft(true);
+  setBankEditState(null, null);
   show('ss');
 }
 
@@ -72,6 +80,7 @@ function initPlayer() {
   const pin = new URLSearchParams(location.search).get('pin');
   if (pin) document.getElementById('jpin').value = pin;
   show('spj');
+  renderPlayerLiveRank([]);
 }
 
 // ═══════════════════════════════════════════════════════════
@@ -110,6 +119,16 @@ function buildCards() {
   }
 }
 
+function ensureQCountOption(count) {
+  const sel = document.getElementById('qcount');
+  const val = String(count);
+  if ([...sel.options].some(o => o.value === val)) return;
+  const opt = document.createElement('option');
+  opt.value = val;
+  opt.textContent = val;
+  sel.appendChild(opt);
+}
+
 function getFormQ() {
   const n = parseInt(document.getElementById('qcount').value);
   const qs = [];
@@ -124,6 +143,182 @@ function getFormQ() {
     });
   }
   return qs;
+}
+
+function getQuizPayload() {
+  return {
+    title: (document.getElementById('qtitle').value || 'LB Conexão Quiz').trim(),
+    timePerQ: parseInt(document.getElementById('qtime').value) || 20,
+    questions: getFormQ().map(q => ({
+      text: (q.text || '').trim(),
+      A: (q.A || '').trim(),
+      B: (q.B || '').trim(),
+      C: (q.C || '').trim(),
+      D: (q.D || '').trim(),
+      correct: q.correct,
+    })),
+  };
+}
+
+function validateQuiz(payload) {
+  if (!payload.questions.length) return 'Adicione pelo menos 1 pergunta.';
+  for (let i = 0; i < payload.questions.length; i++) {
+    const q = payload.questions[i];
+    if (!q.text) return `Preencha o texto da pergunta ${i + 1}.`;
+    if (!q.A || !q.B || !q.C || !q.D) return `Preencha todas as alternativas da pergunta ${i + 1}.`;
+    if (!['A', 'B', 'C', 'D'].includes(q.correct)) return `Defina a alternativa correta da pergunta ${i + 1}.`;
+  }
+  return '';
+}
+
+function applyQuizPayload(payload) {
+  const questions = Array.isArray(payload?.questions) ? payload.questions : [];
+  const count = Math.max(1, questions.length || 10);
+  ensureQCountOption(count);
+  document.getElementById('qcount').value = String(count);
+  buildCards();
+
+  document.getElementById('qtitle').value = payload?.title || 'LB Conexão Quiz';
+  document.getElementById('qtime').value = String(payload?.timePerQ || 20);
+
+  questions.forEach((q, i) => {
+    document.getElementById(`qi${i}`).value = q.text || '';
+    document.getElementById(`qo${i}A`).value = q.A || '';
+    document.getElementById(`qo${i}B`).value = q.B || '';
+    document.getElementById(`qo${i}C`).value = q.C || '';
+    document.getElementById(`qo${i}D`).value = q.D || '';
+    document.getElementById(`qc${i}`).value = ['A', 'B', 'C', 'D'].includes(q.correct) ? q.correct : 'A';
+  });
+}
+
+function bindDraftAutosave() {
+  if (G.draftBound) return;
+  const root = document.getElementById('panel-new');
+  root.addEventListener('input', ev => {
+    if (ev.target.id === 'quiz-import') return;
+    saveDraft(true);
+  });
+  root.addEventListener('change', () => saveDraft(true));
+  G.draftBound = true;
+}
+
+function saveDraft(silent = false) {
+  try {
+    localStorage.setItem(DRAFT_KEY, JSON.stringify(getQuizPayload()));
+    if (!silent) toast('Rascunho salvo neste dispositivo! 📝');
+  } catch (e) {
+    if (!silent) toast(`Nao foi possivel salvar o rascunho: ${e.message}`, 'err');
+  }
+}
+
+function loadDraft(silent = false) {
+  try {
+    const raw = localStorage.getItem(DRAFT_KEY);
+    if (!raw) return;
+    const payload = JSON.parse(raw);
+    if (!payload || !Array.isArray(payload.questions) || !payload.questions.length) return;
+    applyQuizPayload(payload);
+    if (!silent) toast('Rascunho restaurado! 📝');
+  } catch (e) {
+    if (!silent) toast(`Nao foi possivel restaurar o rascunho: ${e.message}`, 'err');
+  }
+}
+
+function exportQuiz() {
+  const payload = getQuizPayload();
+  const err = validateQuiz(payload);
+  if (err) return toast(err, 'err');
+
+  const safeName = (payload.title || 'quiz')
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '') || 'quiz';
+  const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `${safeName}.json`;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+  saveDraft(true);
+  toast('Quiz exportado em JSON! 📦');
+}
+
+function openImportQuiz() {
+  document.getElementById('quiz-import').click();
+}
+
+function importQuizFile(event) {
+  const file = event.target.files?.[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = () => {
+    try {
+      const payload = JSON.parse(String(reader.result || '{}'));
+      const normalized = {
+        title: payload.title || payload.nome || 'LB Conexão Quiz',
+        timePerQ: parseInt(payload.timePerQ || payload.tempoPorPergunta || 20) || 20,
+        questions: Array.isArray(payload.questions) ? payload.questions.map((q, i) => ({
+          text: q.text || q.pergunta || `Pergunta ${i + 1}`,
+          A: q.A || q.a || q.opt_a || q.opcaoA || '',
+          B: q.B || q.b || q.opt_b || q.opcaoB || '',
+          C: q.C || q.c || q.opt_c || q.opcaoC || '',
+          D: q.D || q.d || q.opt_d || q.opcaoD || '',
+          correct: q.correct || q.correta || 'A',
+        })) : [],
+      };
+      const err = validateQuiz(normalized);
+      if (err) throw new Error(err);
+      applyQuizPayload(normalized);
+      saveDraft(true);
+      toast('Quiz importado com sucesso! ✅');
+    } catch (e) {
+      toast(`Arquivo invalido: ${e.message}`, 'err');
+    } finally {
+      event.target.value = '';
+    }
+  };
+  reader.readAsText(file);
+}
+
+function clearQuizForm() {
+  if (!confirm('Limpar o quiz atual e apagar o rascunho local?')) return;
+  localStorage.removeItem(DRAFT_KEY);
+  document.getElementById('qtitle').value = 'LB Conexão Quiz';
+  document.getElementById('qtime').value = '20';
+  document.getElementById('qcount').value = '10';
+  buildCards();
+  setBankEditState(null, null);
+  toast('Formulario limpo! ✨');
+}
+
+function setBankEditState(bankId, bankName) {
+  G.editBankId = bankId || null;
+  G.editBankName = bankName || null;
+
+  const banner = document.getElementById('bank-edit-banner');
+  const nameEl = document.getElementById('bank-edit-name');
+  const btn = document.getElementById('save-bank-btn');
+  if (!banner || !nameEl || !btn) return;
+
+  if (G.editBankId) {
+    banner.style.display = 'flex';
+    nameEl.textContent = `Editando "${G.editBankName || 'Banco salvo'}"`;
+    btn.textContent = 'Atualizar Banco';
+  } else {
+    banner.style.display = 'none';
+    nameEl.textContent = '';
+    btn.textContent = 'Salvar Banco';
+  }
+}
+
+function cancelBankEdit() {
+  setBankEditState(null, null);
+  toast('Edicao de banco cancelada.');
 }
 
 function demoFill() {
@@ -158,6 +353,7 @@ function demoFill() {
     });
     document.getElementById(`qc${i}`).value = d.c;
   }
+  saveDraft(true);
 }
 
 // ═══════════════════════════════════════════════════════════
@@ -195,29 +391,43 @@ async function loadBanks() {
       el.innerHTML = `
         <div class="bico">📚</div>
         <div class="binfo">
-          <div class="bnm">${b.bank_name}</div>
+          <div class="bnm"></div>
           <div class="bmeta">${b.count} pergunta${b.count !== 1 ? 's' : ''} · ${dt}</div>
         </div>
         <div class="bacts">
-          <button class="btn btn-blue btn-sm" onclick="loadBank('${b.bank_id}','${b.bank_name}')">▶ Usar</button>
-          <button class="btn btn-danger btn-sm" onclick="delBank('${b.bank_id}')">🗑️</button>
+          <button class="btn btn-blue btn-sm" data-act="use">▶ Usar</button>
+          <button class="btn btn-ghost btn-sm" data-act="edit">✏️ Editar</button>
+          <button class="btn btn-danger btn-sm" data-act="delete">🗑️</button>
         </div>`;
+      el.querySelector('.bnm').textContent = b.bank_name;
+      el.querySelector('[data-act="use"]').addEventListener('click', () => loadBank(b.bank_id, b.bank_name));
+      el.querySelector('[data-act="edit"]').addEventListener('click', () => editBank(b.bank_id, b.bank_name));
+      el.querySelector('[data-act="delete"]').addEventListener('click', () => delBank(b.bank_id));
       blEl.appendChild(el);
     });
   } catch (e) { emEl.textContent = '❌ Erro: ' + e.message; }
 }
 
 async function loadBank(bankId, bankName) {
+  setBankEditState(null, null);
+  await openBankInForm(bankId, bankName);
+}
+
+async function editBank(bankId, bankName) {
+  await openBankInForm(bankId, bankName);
+  setBankEditState(bankId, bankName);
+  toast(`Banco "${bankName}" pronto para edicao! ✏️`);
+}
+
+async function openBankInForm(bankId, bankName) {
   load('Carregando banco…');
   try {
     const data    = await GET('banks', `select=*&bank_id=eq.${bankId}&order=idx.asc`);
     const n       = data.length;
-    const opts    = [5,10,15,20];
-    const closest = opts.reduce((a, b) => Math.abs(b - n) < Math.abs(a - n) ? b : a);
-    document.getElementById('qcount').value = String(closest);
+    ensureQCountOption(n);
+    document.getElementById('qcount').value = String(n);
     buildCards();
-    const useN = Math.min(n, closest);
-    for (let i = 0; i < useN; i++) {
+    for (let i = 0; i < n; i++) {
       const q = data[i];
       document.getElementById(`qi${i}`).value  = q.text;
       document.getElementById(`qo${i}A`).value = q.opt_a;
@@ -227,23 +437,30 @@ async function loadBank(bankId, bankName) {
       document.getElementById(`qc${i}`).value  = q.correct;
     }
     document.getElementById('qtitle').value = bankName;
+    saveDraft(true);
     load(); switchTab('new');
     toast(`Banco "${bankName}" carregado! ✅`);
   } catch (e) { load(); toast(e.message, 'err'); }
 }
 
 async function doSaveBank() {
-  const name   = document.getElementById('qtitle').value || 'Banco sem nome';
-  const qs     = getFormQ();
-  const bankId = 'bank_' + Date.now();
-  load('Salvando banco…');
+  const payload = getQuizPayload();
+  const err = validateQuiz(payload);
+  if (err) return toast(err, 'err');
+  const name   = payload.title || 'Banco sem nome';
+  const qs     = payload.questions;
+  const wasEditing = Boolean(G.editBankId);
+  const bankId = G.editBankId || ('bank_' + Date.now());
+  load(wasEditing ? 'Atualizando banco…' : 'Salvando banco…');
   try {
+    if (wasEditing) await DEL('banks', `bank_id=eq.${G.editBankId}`);
     const rows = qs.map((q, i) => ({
       bank_id: bankId, bank_name: name, idx: i,
       text: q.text, opt_a: q.A, opt_b: q.B, opt_c: q.C, opt_d: q.D, correct: q.correct,
     }));
     await POST('banks', rows);
-    load(); toast(`Banco "${name}" salvo! 💾`);
+    setBankEditState(bankId, name);
+    load(); toast(wasEditing ? `Banco "${name}" atualizado! 💾` : `Banco "${name}" salvo! 💾`);
   } catch (e) { load(); toast(e.message, 'err'); }
 }
 
@@ -259,10 +476,14 @@ async function delBank(bankId) {
 // ═══════════════════════════════════════════════════════════
 
 async function createRoom() {
-  const title    = document.getElementById('qtitle').value || 'Quiz';
-  const timePerQ = parseInt(document.getElementById('qtime').value);
-  const questions = getFormQ();
+  const payload = getQuizPayload();
+  const err = validateQuiz(payload);
+  if (err) return toast(err, 'err');
+  const title = payload.title || 'LB Conexão Quiz';
+  const timePerQ = payload.timePerQ;
+  const questions = payload.questions;
   G.questions = questions; G.timePerQ = timePerQ; G.totalQ = questions.length;
+  saveDraft(true);
 
   load('Criando sala…');
   try {
@@ -290,8 +511,7 @@ async function createRoom() {
 
     // ── QR Code aponta para aluno.html?pin=XXXXXX ──────────
     // Detecta se está rodando via Live Server (http) ou arquivo local
-    const base    = location.href.replace(/index\.html.*$/, '');
-    const joinUrl = `${base}aluno.html?pin=${pin}`;
+    const joinUrl = new URL(`aluno.html?pin=${pin}`, location.href).toString();
 
     document.getElementById('qr-div').innerHTML = '';
     new QRCode(document.getElementById('qr-div'), {
@@ -437,6 +657,72 @@ async function renderRanking(fin) {
   if (btnFin)  btnFin.style.display  = G.role === 'admin' &&  isLast ? 'block' : 'none';
 }
 
+async function exportFinalReport() {
+  if (!G.pin) return toast('Nenhum jogo finalizado para exportar.', 'err');
+  load('Gerando relatorio…');
+  try {
+    const [players, answers, questions] = await Promise.all([
+      GET('players', `pin=eq.${G.pin}&select=*&order=score.desc`),
+      GET('answers', `pin=eq.${G.pin}&select=*`),
+      GET('questions', `pin=eq.${G.pin}&select=idx,text,correct&order=idx.asc`),
+    ]);
+
+    const answerMap = {};
+    (answers || []).forEach(a => {
+      answerMap[`${a.player_name}::${a.question_idx}`] = a;
+    });
+
+    const baseHeaders = ['Posicao', 'Nome', 'Avatar', 'Pontuacao', 'Acertos'];
+    const questionHeaders = [];
+    (questions || []).forEach(q => {
+      const n = Number(q.idx) + 1;
+      questionHeaders.push(`Pergunta ${n}`);
+      questionHeaders.push(`Resposta ${n}`);
+      questionHeaders.push(`Correta ${n}`);
+      questionHeaders.push(`Acertou ${n}`);
+      questionHeaders.push(`Pontos ${n}`);
+      questionHeaders.push(`Tempo Restante ${n}`);
+    });
+
+    const rows = [(baseHeaders.concat(questionHeaders)).join(';')];
+
+    (players || []).forEach((p, idx) => {
+      const row = [idx + 1, p.name, p.avatar || '', p.score || 0, p.correct || 0];
+      (questions || []).forEach(q => {
+        const ans = answerMap[`${p.name}::${q.idx}`];
+        row.push((q.text || '').replace(/;/g, ','));
+        row.push(ans?.option || '');
+        row.push(q.correct || '');
+        row.push(ans ? (ans.is_correct ? 'Sim' : 'Nao') : 'Nao respondeu');
+        row.push(ans?.points ?? 0);
+        row.push(ans?.time_left ?? '');
+      });
+      rows.push(row.map(csvEscape).join(';'));
+    });
+
+    const blob = new Blob(["\ufeff" + rows.join('\n')], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `lb-conexao-quiz-relatorio-${G.pin}.csv`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+    load();
+    toast('Relatorio exportado em CSV! 📊');
+  } catch (e) {
+    load();
+    toast(e.message, 'err');
+  }
+}
+
+function csvEscape(value) {
+  const text = String(value ?? '');
+  if (!/[;"\n]/.test(text)) return text;
+  return `"${text.replace(/"/g, '""')}"`;
+}
+
 function buildRankList(ranking) {
   const M = ['🥇','🥈','🥉'];
   document.getElementById('rklist').innerHTML = ranking.slice(0, 10).map((p, i) => {
@@ -488,7 +774,8 @@ function showFinal(rk) {
 
 function restart() {
   clearInterval(G.timer); clearInterval(G.pollTimer);
-  Object.assign(G, { pin:null, questions:[], currentQ:0, prevRank:[] });
+  Object.assign(G, { pin:null, questions:[], currentQ:0, prevRank:[], editBankId:null, editBankName:null, liveRank:[] });
+  setBankEditState(null, null);
   show('ss');
 }
 
@@ -530,6 +817,7 @@ async function doJoin() {
     document.getElementById('wnm').textContent  = `Olá, ${name}! ${avatar}`;
     document.getElementById('wava').textContent = avatar;
     toast('Você entrou! Aguarde o professor 🎉');
+    renderPlayerLiveRank([]);
 
     startPlayerPoll();
   } catch (e) {
@@ -582,6 +870,7 @@ async function startPlayerQ() {
     });
     document.getElementById('ptfil').style.width      = '100%';
     document.getElementById('ptfil').style.background = 'var(--acc)';
+    updatePlayerLiveRank();
 
     G.timer = setInterval(() => {
       G.timeLeft--;
@@ -600,6 +889,7 @@ function pollNextQ() {
   G.pollTimer = setInterval(async () => {
     try {
       const games = await GET('games', `pin=eq.${G.pin}&select=status,current_q`);
+      await updatePlayerLiveRank();
       if (!games.length) return;
       const g = games[0];
       if (g.status === 'finished') { clearInterval(G.pollTimer); clearInterval(G.timer); playerFinal(); return; }
@@ -670,6 +960,7 @@ async function showPRes(isCorrect, points) {
   document.getElementById('prpts').textContent = isCorrect ? `+${points} pts` : '0 pts';
   try {
     const data = await GET('players', `pin=eq.${G.pin}&select=name,score&order=score.desc`);
+    renderPlayerLiveRank(data || []);
     const pos  = (data || []).findIndex(p => p.name === G.name) + 1;
     document.getElementById('prrnk').textContent = pos > 0 ? `Você está em #${pos} 🏆` : '';
   } catch (_) {}
@@ -677,6 +968,7 @@ async function showPRes(isCorrect, points) {
 
 async function playerFinal() {
   const data = await GET('players', `pin=eq.${G.pin}&select=*&order=score.desc`);
+  renderPlayerLiveRank(data || []);
   G.prevRank = [];
   buildRankList(data || []);
   show('srnk');
@@ -685,4 +977,41 @@ async function playerFinal() {
   const btnFin  = document.getElementById('btn-rkfin');
   if (btnNext) btnNext.style.display = 'none';
   if (btnFin)  btnFin.style.display  = 'none';
+}
+
+async function updatePlayerLiveRank() {
+  try {
+    const data = await GET('players', `pin=eq.${G.pin}&select=name,avatar,score,correct&order=score.desc`);
+    renderPlayerLiveRank(data || []);
+  } catch (_) {}
+}
+
+function renderPlayerLiveRank(ranking) {
+  G.liveRank = ranking || [];
+  const listEl = document.getElementById('live-rank-list');
+  const selfEl = document.getElementById('live-rank-self');
+  const statusEl = document.getElementById('live-rank-status');
+  if (!listEl || !selfEl || !statusEl) return;
+
+  if (!ranking.length) {
+    selfEl.textContent = 'Sua posição aparecerá aqui.';
+    listEl.innerHTML = '';
+    statusEl.textContent = 'Aguardando dados';
+    return;
+  }
+
+  const pos = ranking.findIndex(p => p.name === G.name) + 1;
+  const me = ranking[pos - 1];
+  selfEl.textContent = pos > 0
+    ? `Você está em #${pos} com ${Number(me.score || 0).toLocaleString()} pts`
+    : 'Você entrou na sala. O ranking será atualizado em instantes.';
+  statusEl.textContent = `${ranking.length} jogador${ranking.length !== 1 ? 'es' : ''}`;
+
+  listEl.innerHTML = ranking.slice(0, 5).map((p, i) => `
+    <div class="live-rank-item ${p.name === G.name ? 'me' : ''}">
+      <span class="live-rank-pos">#${i + 1}</span>
+      <span class="live-rank-name">${p.avatar || '🎓'} ${p.name}</span>
+      <span class="live-rank-score">${Number(p.score || 0).toLocaleString()}</span>
+    </div>
+  `).join('');
 }
