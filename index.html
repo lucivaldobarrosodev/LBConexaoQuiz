@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>QuizZap! ⚡ — Professor</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="bg-orbs">
+  <div class="orb orb1"></div>
+  <div class="orb orb2"></div>
+  <div class="orb orb3"></div>
+</div>
+
+<!-- LOADING -->
+<div class="ovl" id="loader"><div class="spin"></div><p id="lmsg">Aguarde…</p></div>
+<!-- TOAST -->
+<div class="tst" id="toast"></div>
+
+<!-- ══ SETUP ══ -->
+<div id="ss" class="scr on">
+  <div class="tb">
+    <div class="logo">QuizZap! ⚡</div>
+    <div class="rt-badge"><span class="rt-dot"></span> Supabase</div>
+  </div>
+  <div class="sw">
+    <div class="ph">🛠️ Montar Quiz</div>
+    <div class="ps">Crie agora ou carregue um banco salvo</div>
+
+    <div class="tabs">
+      <button class="tab on" id="tab-new"   onclick="switchTab('new')">✏️ Novo Quiz</button>
+      <button class="tab"    id="tab-saved" onclick="switchTab('saved')">📚 Bancos Salvos</button>
+    </div>
+
+    <!-- NOVO QUIZ -->
+    <div id="panel-new">
+      <div class="cfg">
+        <div class="cf" style="flex:2;min-width:185px">
+          <label>Nome do Quiz</label>
+          <input type="text" id="qtitle" value="Meu Quiz" placeholder="Ex: Matemática 9A">
+        </div>
+        <div class="cf">
+          <label>Perguntas</label>
+          <select id="qcount" onchange="buildCards()">
+            <option value="5">5</option>
+            <option value="10" selected>10</option>
+            <option value="15">15</option>
+            <option value="20">20</option>
+          </select>
+        </div>
+        <div class="cf">
+          <label>Tempo / Pergunta</label>
+          <select id="qtime">
+            <option value="10">10 seg</option>
+            <option value="20" selected>20 seg</option>
+            <option value="30">30 seg</option>
+            <option value="60">60 seg</option>
+          </select>
+        </div>
+      </div>
+      <div class="qlist" id="qlist"></div>
+      <div class="sa">
+        <button class="btn btn-yellow" onclick="demoFill()">⚡ Exemplo</button>
+        <button class="btn btn-purple" onclick="doSaveBank()">💾 Salvar Banco</button>
+        <button class="btn btn-green btn-lg" onclick="createRoom()">🚀 Criar Sala</button>
+      </div>
+    </div>
+
+    <!-- BANCOS SALVOS -->
+    <div id="panel-saved" style="display:none">
+      <div class="empty" id="bank-empty">⏳ Carregando…</div>
+      <div class="blist" id="blist"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ LOBBY ══ -->
+<div id="slob" class="scr">
+  <div class="tb">
+    <div class="logo">QuizZap! ⚡</div>
+    <div id="lob-nm" style="font-family:'Fredoka One',cursive;color:var(--muted);font-size:.85rem;"></div>
+    <button class="btn btn-green" onclick="adminStart()">▶ Iniciar</button>
+  </div>
+  <div class="lob">
+    <div class="lob-l">
+      <div class="pin-box">
+        <div class="pin-lbl">📌 PIN da Sala</div>
+        <div class="pin-val" id="lpin">——</div>
+      </div>
+      <div class="qr-box">
+        <div class="qr-lbl">📱 Alunos escaneiam aqui</div>
+        <div id="qr-div"></div>
+        <div class="qr-url" id="qr-url"></div>
+      </div>
+    </div>
+    <div class="lob-r">
+      <h3><span class="rt-dot"></span> Ao vivo na sala</h3>
+      <div class="pcnt" id="pcnt">Aguardando alunos…</div>
+      <div class="pwrap" id="pwrap"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ PERGUNTA ══ -->
+<div id="sqadm" class="scr">
+  <div class="tb" style="flex-shrink:0">
+    <div class="logo">QuizZap! ⚡</div>
+    <div class="acnt" id="acnt">✅ 0 resp.</div>
+    <div style="display:flex;gap:5px">
+      <button class="btn btn-yellow btn-sm" id="btn-rev"  onclick="adminReveal()" style="display:none">Revelar ▼</button>
+      <button class="btn btn-green  btn-sm" id="btn-nxtq" onclick="adminNext()"   style="display:none">Próx. →</button>
+    </div>
+  </div>
+  <div class="qmeta">
+    <div class="qtag" id="qtag">1 / 10</div>
+    <div class="tmr">
+      <svg viewBox="0 0 54 54" width="54" height="54">
+        <circle class="tmr-bg" cx="27" cy="27" r="23"/>
+        <circle class="tmr-fg" id="tfg" cx="27" cy="27" r="23" stroke-dasharray="144.5" stroke-dashoffset="0"/>
+      </svg>
+      <div class="tmr-n" id="tnum">20</div>
+    </div>
+  </div>
+  <div class="qbbl"><h2 id="qtxt">Carregando…</h2></div>
+  <div class="ag">
+    <button class="abtn A" id="ab-A"><span class="aico">▲</span><span class="atxt" id="at-A"></span><span class="acn" id="ac-A">0</span><span class="abar" id="abar-A"></span></button>
+    <button class="abtn B" id="ab-B"><span class="aico">●</span><span class="atxt" id="at-B"></span><span class="acn" id="ac-B">0</span><span class="abar" id="abar-B"></span></button>
+    <button class="abtn C" id="ab-C"><span class="aico">♦</span><span class="atxt" id="at-C"></span><span class="acn" id="ac-C">0</span><span class="abar" id="abar-C"></span></button>
+    <button class="abtn D" id="ab-D"><span class="aico">■</span><span class="atxt" id="at-D"></span><span class="acn" id="ac-D">0</span><span class="abar" id="abar-D"></span></button>
+  </div>
+</div>
+
+<!-- ══ RANKING ══ -->
+<div id="srnk" class="scr">
+  <div class="rkh"><h2>🏆 Ranking</h2><p id="rksub"></p></div>
+  <div class="rklist" id="rklist"></div>
+  <button class="btn btn-acc"   id="btn-rknxt" onclick="adminCont()" style="display:none">Próxima Pergunta →</button>
+  <button class="btn btn-green" id="btn-rkfin" onclick="adminFin()"  style="display:none">🏁 Resultado Final</button>
+</div>
+
+<!-- ══ FINAL ══ -->
+<div id="sfin" class="scr">
+  <div style="font-size:2.6rem;animation:float 2s ease-in-out infinite">🎊</div>
+  <div class="fin-t">Fim de Jogo!</div>
+  <div class="fin-s" id="fins"></div>
+  <div class="podium" id="podium"></div>
+  <div class="rklist" id="finlist" style="max-width:460px;width:100%"></div>
+  <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:8px">
+    <button class="btn btn-acc" onclick="restart()">🔄 Novo Jogo</button>
+  </div>
+</div>
+
+<script src="config.js"></script>
+<script src="app.js"></script>
+<script>initAdmin();</script>
+</body>
+</html>

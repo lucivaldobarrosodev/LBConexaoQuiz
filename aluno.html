@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <title>QuizZap! ⚡ — Aluno</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="bg-orbs">
+  <div class="orb orb1"></div>
+  <div class="orb orb2"></div>
+  <div class="orb orb3"></div>
+</div>
+
+<!-- LOADING -->
+<div class="ovl" id="loader"><div class="spin"></div><p id="lmsg">Aguarde…</p></div>
+<!-- TOAST -->
+<div class="tst" id="toast"></div>
+
+<!-- ══ ENTRAR ══ -->
+<div id="spj" class="scr on">
+  <div class="jlogo">QuizZap! ⚡</div>
+  <div class="jcard">
+    <div class="jlbl">📌 PIN da Sala</div>
+    <input class="inp inp-pin" type="text" id="jpin"
+           placeholder="000000" maxlength="6" inputmode="numeric">
+    <div class="jlbl">👤 Seu Nome</div>
+    <input class="inp" type="text" id="jname"
+           placeholder="Como quer ser chamado?"
+           style="text-align:center;font-size:.95rem;">
+    <div class="jerr" id="jerr"></div>
+    <button class="btn btn-green btn-lg"
+            style="width:100%;justify-content:center"
+            onclick="doJoin()">Entrar 🚀</button>
+  </div>
+</div>
+
+<!-- ══ AGUARDANDO ══ -->
+<div id="spw" class="scr">
+  <div class="wava" id="wava">🎓</div>
+  <div class="wnm"  id="wnm">Pronto!</div>
+  <div class="wsub">Aguardando o professor iniciar…</div>
+  <div class="dots"><span></span><span></span><span></span></div>
+  <div class="winfo" id="winfo">
+    <span class="rt-dot"></span> Conectado — aguardando
+  </div>
+</div>
+
+<!-- ══ PERGUNTA ══ -->
+<div id="spqa" class="scr">
+  <div class="pqtxt" id="pqtxt">Aguardando pergunta…</div>
+  <div class="ptbar"><div class="ptfil" id="ptfil" style="width:100%"></div></div>
+  <div class="pg" id="pg">
+    <button class="pbtn A" onclick="doAns('A')">▲</button>
+    <button class="pbtn B" onclick="doAns('B')">●</button>
+    <button class="pbtn C" onclick="doAns('C')">♦</button>
+    <button class="pbtn D" onclick="doAns('D')">■</button>
+  </div>
+  <div class="pres" id="pres">
+    <div class="prico" id="prico">🎉</div>
+    <div class="prtxt" id="prtxt">Correto!</div>
+    <div class="prpts" id="prpts">+850 pts</div>
+    <div class="prrnk" id="prrnk">#1 🏆</div>
+  </div>
+</div>
+
+<!-- ══ RANKING PARCIAL / FINAL ══ -->
+<div id="srnk" class="scr">
+  <div class="rkh"><h2>🏆 Ranking</h2><p id="rksub"></p></div>
+  <div class="rklist" id="rklist"></div>
+</div>
+
+<script src="config.js"></script>
+<script src="app.js"></script>
+<script>initPlayer();</script>
+</body>
+</html>
