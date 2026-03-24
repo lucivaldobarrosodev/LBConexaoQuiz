@@ -299,6 +299,15 @@ html, body { height: 100%; overflow: hidden; font-family: 'Nunito', sans-serif; 
     linear-gradient(180deg, #dff3ff 0%, #c9ebff 48%, #b8e3fb 100%);
   color:#0f2f46;
 }
+
+body.home-body[data-route="professor"],
+body.home-body[data-route="aluno"] {
+  background:
+    radial-gradient(circle at top left, rgba(56,189,248,.28), transparent 26%),
+    radial-gradient(circle at bottom right, rgba(14,165,233,.2), transparent 28%),
+    linear-gradient(180deg, #dff3ff 0%, #c9ebff 48%, #b8e3fb 100%) !important;
+  color:#0f2f46 !important;
+}
 .home-shell {
   position:relative; z-index:1; min-height:100%;
   width:min(1120px, calc(100% - 32px)); margin:0 auto; padding:28px 0 42px;
@@ -307,6 +316,18 @@ html, body { height: 100%; overflow: hidden; font-family: 'Nunito', sans-serif; 
 .home-body .orb1 { background:#38bdf8; top:-140px; left:-100px; }
 .home-body .orb2 { background:#0ea5e9; bottom:-140px; right:-100px; }
 .home-body .orb3 { background:#93c5fd; top:42%; left:38%; }
+
+body.home-body[data-route="professor"] .orb,
+body.home-body[data-route="aluno"] .orb { filter:blur(120px); opacity:.18; }
+
+body.home-body[data-route="professor"] .orb1,
+body.home-body[data-route="aluno"] .orb1 { background:#38bdf8; top:-140px; left:-100px; }
+
+body.home-body[data-route="professor"] .orb2,
+body.home-body[data-route="aluno"] .orb2 { background:#0ea5e9; bottom:-140px; right:-140px; }
+
+body.home-body[data-route="professor"] .orb3,
+body.home-body[data-route="aluno"] .orb3 { background:#93c5fd; top:42%; left:38%; }
 .home-hero {
   background:
     radial-gradient(circle at top left, rgba(14,165,233,.1), transparent 32%),
@@ -412,4 +433,1168 @@ html, body { height: 100%; overflow: hidden; font-family: 'Nunito', sans-serif; 
 @media(max-width:480px){
   .ag,.pg,.og{grid-template-columns:1fr;}
   .home-card { min-height:auto; }
+}
+
+/* React UI refresh */
+.tb {
+  padding: 14px 20px;
+  background: rgba(7, 11, 21, .74);
+  border-bottom: 1px solid rgba(255,255,255,.08);
+  backdrop-filter: blur(16px);
+}
+
+.logo {
+  background: none;
+  -webkit-text-fill-color: initial;
+  color: #f7fbff;
+  letter-spacing: -.02em;
+}
+
+.btn {
+  transition: transform .18s ease, box-shadow .18s ease, filter .18s ease, background .18s ease;
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+  filter: none;
+}
+
+.page-guide,
+.cfg,
+.qcard,
+.bitem,
+.pin-box,
+.lob-r,
+.jcard,
+.winfo,
+.pqtxt,
+.live-rank-shell,
+.rki {
+  box-shadow: 0 14px 32px rgba(0,0,0,.18);
+}
+
+.page-guide {
+  padding: 18px 20px;
+  border-radius: 18px;
+  background: linear-gradient(180deg, rgba(19,32,53,.94), rgba(11,20,34,.94));
+}
+
+.page-guide h3 { color:#f7fbff; }
+.page-guide p { color:#d8e4ff; line-height:1.65; }
+.page-guide ul { color:#9eb2d0; }
+
+.student-guide h3 { color:#8ce9ff; }
+
+.setup-overview {
+  display:grid;
+  grid-template-columns:repeat(3, minmax(0, 1fr));
+  gap:12px;
+}
+
+.setup-stat {
+  padding:16px 18px;
+  border-radius:18px;
+  border:1px solid rgba(255,255,255,.08);
+  background: linear-gradient(180deg, rgba(22,36,58,.96), rgba(14,24,40,.96));
+}
+
+.setup-stat-label {
+  display:block;
+  margin-bottom:8px;
+  color:#8ea5c4;
+  font-size:.72rem;
+  font-weight:800;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+}
+
+.setup-stat strong {
+  display:block;
+  font-family:'Sora',sans-serif;
+  font-size:1.35rem;
+  font-weight:800;
+  color:#fff;
+}
+
+.setup-stat small {
+  display:block;
+  margin-top:6px;
+  color:#bbcae2;
+  line-height:1.55;
+}
+
+.action-groups {
+  display:grid;
+  gap:12px;
+}
+
+.sa-primary { justify-content:flex-end; }
+
+.section-banner {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  padding:14px 16px;
+  border-radius:16px;
+  border:1px solid rgba(34,211,238,.16);
+  background: linear-gradient(135deg, rgba(34,211,238,.12), rgba(255,69,32,.08));
+}
+
+.section-banner strong {
+  display:block;
+  margin-bottom:4px;
+  font-family:'Sora',sans-serif;
+  font-size:.94rem;
+  font-weight:800;
+  color:#f4fbff;
+}
+
+.section-banner span {
+  color:#cad8ee;
+  font-size:.86rem;
+  line-height:1.55;
+}
+
+.section-banner-inline { margin-bottom:12px; }
+.section-banner-center { width:min(560px, 100%); text-align:center; justify-content:center; }
+
+.cfg {
+  padding:16px;
+  border-radius:18px;
+  background: linear-gradient(180deg, rgba(20,33,54,.96), rgba(12,22,38,.96));
+}
+
+.qcard {
+  padding:16px;
+  border-radius:18px;
+  background: linear-gradient(180deg, rgba(20,33,54,.96), rgba(10,18,31,.96));
+}
+
+.qtop { gap:10px; margin-bottom:12px; }
+.qbadge { width:30px; height:30px; border-radius:10px; }
+.qinp, .oi, .cf select, .cf input[type=text] { border-radius:10px; }
+
+.bitem {
+  padding:15px 16px;
+  border-radius:16px;
+  background: linear-gradient(180deg, rgba(20,33,54,.96), rgba(10,18,31,.96));
+}
+
+.lob {
+  gap:20px;
+  align-items:start;
+}
+
+.lob-r {
+  padding:20px;
+  border-radius:24px;
+  background: linear-gradient(180deg, rgba(20,33,54,.96), rgba(10,18,31,.96));
+}
+
+.pin-box {
+  border-width:1px;
+  box-shadow: 0 18px 38px rgba(255,204,0,.08);
+}
+
+.pin-val { letter-spacing:.18em; }
+
+.jcard {
+  max-width:430px;
+  padding:24px;
+  border-radius:24px;
+  background: linear-gradient(180deg, rgba(18,30,48,.97), rgba(9,17,29,.97));
+}
+
+.join-badge {
+  display:inline-flex;
+  align-self:flex-start;
+  padding:8px 12px;
+  border-radius:999px;
+  background: rgba(34,211,238,.1);
+  border:1px solid rgba(34,211,238,.18);
+  color:#9cecff;
+  font-size:.74rem;
+  font-weight:800;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+}
+
+.join-highlights {
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+}
+
+.join-highlights span {
+  padding:7px 10px;
+  border-radius:999px;
+  background: rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.05);
+  color:#d7e6fc;
+  font-size:.76rem;
+  font-weight:700;
+}
+
+.waiting-card {
+  width:min(430px, 100%);
+  padding:14px 16px;
+  border-radius:16px;
+  border:1px solid rgba(255,255,255,.08);
+  background: linear-gradient(180deg, rgba(18,30,48,.94), rgba(10,18,30,.94));
+  text-align:left;
+}
+
+.waiting-card strong {
+  display:block;
+  margin-bottom:4px;
+  font-family:'Sora',sans-serif;
+  color:#fff;
+}
+
+.waiting-card span {
+  color:#cad8ee;
+  line-height:1.6;
+}
+
+.question-meta-student {
+  width:100%;
+  max-width:440px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  padding:10px 14px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,.08);
+  background: rgba(255,255,255,.05);
+  color:#bfd0e8;
+}
+
+.question-meta-student strong {
+  font-family:'Sora',sans-serif;
+  color:#fff;
+}
+
+.pqtxt,
+.live-rank-shell {
+  max-width:520px;
+}
+
+.pqtxt {
+  padding:18px 20px;
+  border-radius:20px;
+  background: linear-gradient(180deg, rgba(20,33,54,.96), rgba(10,18,31,.96));
+}
+
+.live-rank-shell {
+  padding:16px;
+  border-radius:18px;
+}
+
+.live-rank-self,
+.live-rank-item {
+  background: rgba(255,255,255,.05);
+}
+
+.home-hero {
+  display:grid;
+  grid-template-columns:minmax(0, 1.15fr) minmax(320px, .85fr);
+  gap:22px;
+  padding:34px;
+  border-radius:34px;
+}
+
+.home-hero-copy {
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+}
+
+.home-hero h1 {
+  margin-bottom:16px;
+  letter-spacing:-.05em;
+}
+
+.home-hero p {
+  margin-bottom:0;
+  max-width:680px;
+  color:#3d6176;
+}
+
+.home-stats {
+  display:grid;
+  grid-template-columns:repeat(3, minmax(0, 1fr));
+  gap:12px;
+  margin-top:24px;
+}
+
+.home-stat {
+  padding:16px;
+  border-radius:18px;
+  background: rgba(255,255,255,.78);
+  border:1px solid rgba(36,120,157,.12);
+}
+
+.home-stat strong {
+  display:block;
+  margin-bottom:6px;
+  font-family:'Sora',sans-serif;
+  font-size:.95rem;
+  font-weight:800;
+  color:#143750;
+}
+
+.home-stat span {
+  color:#547286;
+  font-size:.86rem;
+  line-height:1.6;
+}
+
+.home-card {
+  min-height:240px;
+  gap:0;
+  padding:24px;
+}
+
+.home-card-icon {
+  width:48px;
+  height:48px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  margin-bottom:18px;
+  border-radius:16px;
+  background: rgba(255,255,255,.12);
+  font-family:'Sora',sans-serif;
+  font-size:1.2rem;
+  font-weight:800;
+}
+
+.home-card strong {
+  margin:10px 0;
+}
+
+.home-card small {
+  font-size:.94rem;
+}
+
+.home-card-action {
+  margin-top:auto;
+  padding-top:24px;
+  font-family:'Sora',sans-serif;
+  font-size:.84rem;
+  font-weight:700;
+  color:rgba(255,255,255,.92);
+}
+
+.home-card-prof {
+  background: linear-gradient(160deg, #173f5b, #12344c 58%, #0f2d41);
+}
+
+.home-card-prof:hover {
+  background: linear-gradient(160deg, #1a4a6a, #153b56 58%, #123149);
+}
+
+.home-card-student {
+  background: linear-gradient(160deg, #11525b, #0e474f 58%, #0a3b42);
+}
+
+.home-card-student:hover {
+  background: linear-gradient(160deg, #13636d, #10565f 58%, #0c474e);
+}
+
+.home-grid {
+  margin-top:20px;
+}
+
+.home-panel {
+  padding:24px;
+  border-radius:24px;
+}
+
+@media(max-width:1080px){
+  .home-hero,
+  .setup-overview { grid-template-columns:1fr; }
+}
+
+@media(max-width:820px){
+  .tb { grid-template-columns:1fr; justify-items:center; }
+  .logo { justify-self:center; }
+  .rt-badge { justify-self:center; }
+  .sa-primary { justify-content:center; }
+  .home-card { min-height:210px; }
+}
+
+@media(max-width:640px){
+  .home-hero,
+  .home-stats,
+  .setup-overview,
+  .section-banner,
+  .question-meta-student { grid-template-columns:1fr; }
+  .home-hero { padding:24px 18px; }
+  .home-stats,
+  .home-grid { grid-template-columns:1fr; }
+  .section-banner,
+  .bank-edit,
+  .question-meta-student { border-radius:18px; }
+  .section-banner,
+  .bank-edit,
+  .question-meta-student,
+  .qfoot { flex-direction:column; align-items:flex-start; }
+}
+
+/* unified home theme across app */
+body.app-light {
+  background:
+    radial-gradient(circle at top left, rgba(56,189,248,.22), transparent 24%),
+    radial-gradient(circle at bottom right, rgba(14,165,233,.18), transparent 28%),
+    linear-gradient(180deg, #e8f7ff 0%, #d8efff 45%, #c7e7fb 100%);
+  color:#12344b;
+}
+
+body.app-light .orb1 { background:#38bdf8; opacity:.16; }
+body.app-light .orb2 { background:#14b8a6; opacity:.14; }
+body.app-light .orb3 { background:#93c5fd; opacity:.12; }
+
+body.app-light .tb {
+  background:rgba(255,255,255,.72);
+  border-bottom:1px solid rgba(36,120,157,.14);
+  backdrop-filter:blur(16px);
+}
+
+body.app-light .logo {
+  color:#13324a;
+}
+
+body.app-light .rt-badge,
+body.app-light #lob-nm,
+body.app-light .ps,
+body.app-light .pcnt,
+body.app-light .wsub,
+body.app-light .fin-s,
+body.app-light .rkh p,
+body.app-light .rk-cor,
+body.app-light .bmeta,
+body.app-light .page-guide ul,
+body.app-light .page-guide p,
+body.app-light .setup-stat small,
+body.app-light .section-banner span,
+body.app-light .waiting-card span,
+body.app-light .question-meta-student,
+body.app-light .live-rank-head span,
+body.app-light .live-rank-self,
+body.app-light .prrnk {
+  color:#547286;
+}
+
+body.app-light .ph,
+body.app-light .rkh h2,
+body.app-light .fin-t,
+body.app-light .wnm,
+body.app-light .prtxt,
+body.app-light .qbbl h2,
+body.app-light .bnm,
+body.app-light .page-guide h3,
+body.app-light .setup-stat strong,
+body.app-light .section-banner strong,
+body.app-light .waiting-card strong,
+body.app-light .question-meta-student strong,
+body.app-light .live-rank-head strong {
+  color:#13324a;
+}
+
+body.app-light .page-guide,
+body.app-light .cfg,
+body.app-light .qcard,
+body.app-light .bitem,
+body.app-light .pin-box,
+body.app-light .lob-r,
+body.app-light .jcard,
+body.app-light .winfo,
+body.app-light .waiting-card,
+body.app-light .pqtxt,
+body.app-light .live-rank-shell,
+body.app-light .rki,
+body.app-light .qbbl,
+body.app-light .qtag,
+body.app-light .acnt,
+body.app-light .question-meta-student,
+body.app-light .home-floating,
+body.app-light .bank-edit,
+body.app-light .section-banner,
+body.app-light .setup-stat {
+  background:rgba(255,255,255,.9);
+  border-color:rgba(36,120,157,.14);
+  box-shadow:0 14px 28px rgba(44,112,145,.1);
+}
+
+body.app-light .cfg,
+body.app-light .qcard,
+body.app-light .pqtxt,
+body.app-light .live-rank-shell,
+body.app-light .qbbl,
+body.app-light .lob-r,
+body.app-light .jcard {
+  background:linear-gradient(160deg, rgba(255,255,255,.97), rgba(242,250,255,.94));
+}
+
+body.app-light .btn-ghost {
+  background:rgba(255,255,255,.72);
+  color:#163750;
+  border:1px solid rgba(36,120,157,.18);
+}
+
+body.app-light .btn-acc {
+  background:linear-gradient(135deg, #fb923c, #f97316);
+  color:#fff;
+  box-shadow:0 10px 22px rgba(249,115,22,.22);
+}
+
+body.app-light .btn-green {
+  background:linear-gradient(135deg, #34d399, #22c55e);
+  color:#04210f;
+}
+
+body.app-light .btn-blue {
+  background:linear-gradient(135deg, #67e8f9, #38bdf8);
+  color:#07273a;
+}
+
+body.app-light .btn-purple {
+  background:linear-gradient(135deg, #a78bfa, #8b5cf6);
+  color:#fff;
+}
+
+body.app-light .btn-yellow {
+  background:linear-gradient(135deg, #fde68a, #f59e0b);
+  color:#372003;
+}
+
+body.app-light .btn-danger {
+  background:linear-gradient(135deg, #fb7185, #ef4444);
+  color:#fff;
+}
+
+body.app-light .cf label,
+body.app-light .jlbl,
+body.app-light .pin-lbl,
+body.app-light .qr-lbl,
+body.app-light .qfoot label,
+body.app-light .setup-stat-label {
+  color:#5f7f95;
+}
+
+body.app-light .inp,
+body.app-light .cf select,
+body.app-light .cf input[type=text],
+body.app-light .qinp,
+body.app-light .oi,
+body.app-light .csel {
+  background:#f7fcff;
+  color:#12344b;
+  border-color:rgba(36,120,157,.16);
+}
+
+body.app-light .inp:focus,
+body.app-light .cf select:focus,
+body.app-light .cf input[type=text]:focus,
+body.app-light .qinp:focus,
+body.app-light .oi:focus,
+body.app-light .csel:focus {
+  border-color:rgba(14,165,233,.36);
+}
+
+body.app-light .pin-box {
+  background:linear-gradient(160deg, #173f5b, #12344c 58%, #0f2d41);
+  border-color:rgba(17,89,122,.2);
+  box-shadow:0 18px 34px rgba(15,62,95,.18);
+}
+
+body.app-light .pin-lbl { color:rgba(237,246,255,.65); }
+body.app-light .pin-val { color:#eff7ff; }
+
+body.app-light .pchip,
+body.app-light .live-rank-item,
+body.app-light .live-rank-self,
+body.app-light .join-highlights span,
+body.app-light .winfo {
+  background:rgba(232,247,255,.9);
+  border-color:rgba(36,120,157,.12);
+}
+
+body.app-light .jlogo {
+  color:#13324a;
+  -webkit-text-fill-color:initial;
+  background:none;
+}
+
+body.app-light .tst {
+  background:rgba(255,255,255,.94);
+}
+
+body.app-light .sw,
+body.app-light .lob,
+body.app-light #sqadm,
+body.app-light #srnk,
+body.app-light #sfin,
+body.app-light #spj,
+body.app-light #spw,
+body.app-light #spqa {
+  position:relative;
+  z-index:1;
+}
+
+body.app-light .section-eyebrow,
+body.app-light .join-badge {
+  display:inline-flex;
+  align-items:center;
+  align-self:center;
+  padding:10px 14px;
+  border-radius:999px;
+  border:1px solid rgba(14,165,233,.24);
+  background:#f3fbff;
+  color:#0f729c;
+  font-size:.76rem;
+  font-weight:800;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+}
+
+body.app-light .section-eyebrow {
+  align-self:flex-start;
+  margin-bottom:6px;
+}
+
+body.app-light .ph,
+body.app-light .jlogo,
+body.app-light .rkh h2,
+body.app-light .fin-t,
+body.app-light .wnm {
+  font-family:'Sora',sans-serif;
+  font-weight:800;
+  letter-spacing:-.04em;
+}
+
+body.app-light .ph {
+  font-size:clamp(2.2rem, 5vw, 3.6rem);
+  line-height:1.02;
+}
+
+body.app-light .jlogo {
+  font-size:clamp(2.7rem, 6vw, 4.8rem);
+  line-height:.98;
+}
+
+body.app-light .rkh h2,
+body.app-light .fin-t {
+  font-size:clamp(2rem, 4vw, 3rem);
+  line-height:1.02;
+}
+
+body.app-light .page-guide,
+body.app-light .cfg,
+body.app-light .qcard,
+body.app-light .bitem,
+body.app-light .lob-r,
+body.app-light .jcard,
+body.app-light .winfo,
+body.app-light .waiting-card,
+body.app-light .pqtxt,
+body.app-light .live-rank-shell,
+body.app-light .rki,
+body.app-light .qbbl,
+body.app-light .bank-edit,
+body.app-light .section-banner,
+body.app-light .setup-stat {
+  border-radius:24px;
+}
+
+body.app-light .pin-box,
+body.app-light .qr-box {
+  border-radius:28px;
+}
+
+body.app-light .qtag,
+body.app-light .acnt,
+body.app-light .question-meta-student,
+body.app-light .btn,
+body.app-light .home-floating {
+  border-radius:999px;
+}
+
+body.app-light .qbadge,
+body.app-light .home-card-icon {
+  border-radius:16px;
+}
+
+body.app-light .page-guide,
+body.app-light .cfg,
+body.app-light .qcard,
+body.app-light .bitem,
+body.app-light .lob-r,
+body.app-light .jcard,
+body.app-light .winfo,
+body.app-light .waiting-card,
+body.app-light .pqtxt,
+body.app-light .live-rank-shell,
+body.app-light .rki,
+body.app-light .qbbl,
+body.app-light .bank-edit,
+body.app-light .section-banner,
+body.app-light .setup-stat,
+body.app-light .question-meta-student,
+body.app-light .qtag,
+body.app-light .acnt {
+  box-shadow:0 14px 28px rgba(44,112,145,.1);
+}
+
+body.app-light .page-guide h3,
+body.app-light .setup-stat strong,
+body.app-light .section-banner strong,
+body.app-light .waiting-card strong,
+body.app-light .live-rank-head strong,
+body.app-light .bnm,
+body.app-light .rk-score {
+  font-family:'Sora',sans-serif;
+  font-weight:800;
+}
+
+body.app-light .rk-score {
+  color:#0f729c;
+}
+
+body.app-light .section-banner,
+body.app-light .bank-edit {
+  background:
+    radial-gradient(circle at top left, rgba(14,165,233,.08), transparent 36%),
+    linear-gradient(160deg, rgba(255,255,255,.98), rgba(242,250,255,.96));
+}
+
+body.app-light .setup-stat,
+body.app-light .page-guide,
+body.app-light .cfg,
+body.app-light .qcard,
+body.app-light .bitem,
+body.app-light .jcard,
+body.app-light .winfo,
+body.app-light .waiting-card,
+body.app-light .pqtxt,
+body.app-light .live-rank-shell,
+body.app-light .rki,
+body.app-light .qbbl,
+body.app-light .question-meta-student,
+body.app-light .qtag,
+body.app-light .acnt {
+  background:
+    radial-gradient(circle at top left, rgba(14,165,233,.06), transparent 34%),
+    linear-gradient(160deg, rgba(255,255,255,.98), rgba(242,250,255,.95));
+}
+
+body.app-light .live-rank-item.me {
+  border-color:rgba(14,165,233,.2);
+  background:rgba(227,247,255,.98);
+}
+
+body.app-light .live-rank-pos,
+body.app-light .rt-dot + * {
+  color:#0f729c;
+}
+
+body.app-light .home-floating {
+  background:rgba(255,255,255,.84);
+}
+
+body.app-light .pchip {
+  color:#153750;
+}
+
+body.app-light .rki:nth-child(1),
+body.app-light .rki:nth-child(2),
+body.app-light .rki:nth-child(3) {
+  background:
+    radial-gradient(circle at top left, rgba(14,165,233,.06), transparent 34%),
+    linear-gradient(160deg, rgba(255,255,255,.98), rgba(242,250,255,.95));
+}
+
+body.app-light .rki:nth-child(1) { border-color:rgba(245,158,11,.24); }
+body.app-light .rki:nth-child(2) { border-color:rgba(148,163,184,.24); }
+body.app-light .rki:nth-child(3) { border-color:rgba(180,83,9,.22); }
+
+body.app-light .app-page-shell {
+  width:min(1120px, calc(100% - 36px));
+  margin:0 auto;
+}
+
+body.app-light .app-center-shell {
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:16px;
+}
+
+body.app-light .app-flow-shell {
+  display:flex;
+  flex-direction:column;
+  gap:16px;
+}
+
+body.app-light .page-hero-card {
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+  padding:34px;
+  border-radius:34px;
+  border:1px solid rgba(36,120,157,.16);
+  background:
+    radial-gradient(circle at top left, rgba(14,165,233,.08), transparent 30%),
+    radial-gradient(circle at bottom right, rgba(20,184,166,.06), transparent 28%),
+    linear-gradient(160deg, rgba(255,255,255,.98), rgba(243,251,255,.96));
+  box-shadow:0 24px 48px rgba(44,112,145,.16);
+}
+
+body.app-light #ss,
+body.app-light #slob,
+body.app-light #sqadm,
+body.app-light #spj,
+body.app-light #spw,
+body.app-light #spqa,
+body.app-light #srnk,
+body.app-light #sfin {
+  padding-top:28px;
+  padding-bottom:34px;
+}
+
+body.app-light #spj .app-center-shell,
+body.app-light #spw .app-center-shell,
+body.app-light #spqa .app-center-shell,
+body.app-light #srnk .app-center-shell,
+body.app-light #sfin .app-center-shell {
+  min-height:calc(100vh - 120px);
+  justify-content:flex-start;
+}
+
+body.app-light .ph {
+  margin:0;
+}
+
+@media(max-width:820px){
+  body.app-light .app-page-shell { width:min(100% - 20px, 1120px); }
+}
+
+@media(max-width:640px){
+  body.app-light .page-hero-card { padding:24px 18px; border-radius:28px; }
+  body.app-light .app-page-shell { width:min(100% - 20px, 1120px); }
+}
+
+body.app-light[data-route="professor"] .sw,
+body.app-light[data-route="professor"] .lob,
+body.app-light[data-route="professor"] .app-flow-shell,
+body.app-light[data-route="professor"] .app-center-shell,
+body.app-light[data-route="aluno"] .app-center-shell {
+  width:min(1120px, calc(100% - 36px));
+  margin:0 auto;
+}
+
+body.app-light[data-route="professor"] .page-hero-card,
+body.app-light[data-route="aluno"] .jcard,
+body.app-light[data-route="aluno"] .waiting-card,
+body.app-light[data-route="aluno"] .winfo,
+body.app-light[data-route="aluno"] .pqtxt,
+body.app-light[data-route="aluno"] .live-rank-shell,
+body.app-light[data-route="aluno"] .pres,
+body.app-light[data-route="aluno"] .question-meta-student,
+body.app-light[data-route="aluno"] .section-banner,
+body.app-light[data-route="aluno"] .rklist,
+body.app-light[data-route="professor"] .page-guide,
+body.app-light[data-route="professor"] .setup-stat,
+body.app-light[data-route="professor"] .cfg,
+body.app-light[data-route="professor"] .bank-edit,
+body.app-light[data-route="professor"] .section-banner,
+body.app-light[data-route="professor"] .bitem,
+body.app-light[data-route="professor"] .qcard,
+body.app-light[data-route="professor"] .lob-r,
+body.app-light[data-route="professor"] .pin-box,
+body.app-light[data-route="professor"] .qtag,
+body.app-light[data-route="professor"] .acnt,
+body.app-light[data-route="professor"] .qbbl,
+body.app-light[data-route="professor"] .rki,
+body.app-light[data-route="professor"] .rklist,
+body.app-light[data-route="aluno"] .rklist,
+body.app-light[data-route="aluno"] .page-guide {
+  background:
+    radial-gradient(circle at top left, rgba(14,165,233,.07), transparent 34%),
+    radial-gradient(circle at bottom right, rgba(56,189,248,.05), transparent 30%),
+    linear-gradient(160deg, rgba(255,255,255,.99), rgba(243,251,255,.96)) !important;
+  border:1px solid rgba(36,120,157,.14) !important;
+  box-shadow:0 18px 36px rgba(44,112,145,.12) !important;
+}
+
+body.app-light[data-route="professor"] .ph,
+body.app-light[data-route="aluno"] .jlogo,
+body.app-light[data-route="aluno"] .wnm,
+body.app-light[data-route="professor"] .rkh h2,
+body.app-light[data-route="aluno"] .rkh h2,
+body.app-light[data-route="professor"] .fin-t,
+body.app-light[data-route="aluno"] .fin-t {
+  color:#143750 !important;
+}
+
+body.app-light[data-route="professor"] .page-guide h3,
+body.app-light[data-route="aluno"] .page-guide h3,
+body.app-light[data-route="professor"] .section-banner strong,
+body.app-light[data-route="aluno"] .section-banner strong,
+body.app-light[data-route="professor"] .setup-stat strong,
+body.app-light[data-route="aluno"] .waiting-card strong,
+body.app-light[data-route="aluno"] .live-rank-head strong,
+body.app-light[data-route="professor"] .bnm,
+body.app-light[data-route="professor"] .qbbl h2 {
+  color:#143750 !important;
+}
+
+body.app-light[data-route="professor"] .page-guide p,
+body.app-light[data-route="professor"] .page-guide ul,
+body.app-light[data-route="professor"] .ps,
+body.app-light[data-route="professor"] .setup-stat small,
+body.app-light[data-route="professor"] .section-banner span,
+body.app-light[data-route="professor"] .bmeta,
+body.app-light[data-route="professor"] .pcnt,
+body.app-light[data-route="aluno"] .page-guide p,
+body.app-light[data-route="aluno"] .page-guide ul,
+body.app-light[data-route="aluno"] .waiting-card span,
+body.app-light[data-route="aluno"] .winfo,
+body.app-light[data-route="aluno"] .wsub,
+body.app-light[data-route="aluno"] .live-rank-head span,
+body.app-light[data-route="aluno"] .live-rank-self,
+body.app-light[data-route="aluno"] .prrnk,
+body.app-light[data-route="aluno"] .rkh p {
+  color:#547286 !important;
+}
+
+body.app-light[data-route="aluno"] .pg,
+body.app-light[data-route="aluno"] .ptbar,
+body.app-light[data-route="aluno"] .question-meta-student,
+body.app-light[data-route="aluno"] .live-rank-shell,
+body.app-light[data-route="aluno"] .pqtxt,
+body.app-light[data-route="aluno"] .pres {
+  width:min(520px, 100%);
+}
+
+body.app-light[data-route="aluno"] #spj,
+body.app-light[data-route="aluno"] #spw,
+body.app-light[data-route="aluno"] #spqa,
+body.app-light[data-route="aluno"] #srnk,
+body.app-light[data-route="professor"] #ss,
+body.app-light[data-route="professor"] #slob,
+body.app-light[data-route="professor"] #sqadm,
+body.app-light[data-route="professor"] #srnk,
+body.app-light[data-route="professor"] #sfin {
+  background:transparent;
+}
+
+body.app-light[data-route="aluno"] .jcard {
+  max-width:540px;
+  padding:28px;
+  gap:16px;
+}
+
+body.app-light[data-route="aluno"] .join-badge,
+body.app-light[data-route="aluno"] .section-eyebrow,
+body.app-light[data-route="professor"] .section-eyebrow {
+  background:#f3fbff !important;
+  color:#0f729c !important;
+  border:1px solid rgba(14,165,233,.22) !important;
+}
+
+body.app-light[data-route="aluno"] .pbtn:hover:not(:disabled),
+body.app-light[data-route="professor"] .btn:hover,
+body.app-light[data-route="aluno"] .btn:hover {
+  transform:translateY(-2px);
+}
+
+body.app-light[data-route="aluno"] .home-floating,
+body.app-light[data-route="professor"] .home-floating {
+  background:rgba(255,255,255,.88) !important;
+  border:1px solid rgba(36,120,157,.16) !important;
+  color:#143750 !important;
+}
+
+body.app-light[data-route="professor"] .tb,
+body.app-light[data-route="aluno"] .tb {
+  background:rgba(255,255,255,.76) !important;
+  border-bottom:1px solid rgba(36,120,157,.14) !important;
+}
+
+body.app-light[data-route="professor"] .logo,
+body.app-light[data-route="aluno"] .logo,
+body.app-light[data-route="professor"] .rt-badge,
+body.app-light[data-route="aluno"] .rt-badge,
+body.app-light[data-route="professor"] #lob-nm,
+body.app-light[data-route="aluno"] .jlbl {
+  color:#143750 !important;
+  -webkit-text-fill-color:initial !important;
+  background:none !important;
+}
+
+body.app-light[data-route="professor"] .cfg,
+body.app-light[data-route="professor"] .qcard,
+body.app-light[data-route="professor"] .bitem,
+body.app-light[data-route="professor"] .lob-r,
+body.app-light[data-route="professor"] .page-guide,
+body.app-light[data-route="professor"] .setup-stat,
+body.app-light[data-route="professor"] .section-banner,
+body.app-light[data-route="professor"] .bank-edit,
+body.app-light[data-route="professor"] .qbbl,
+body.app-light[data-route="professor"] .qtag,
+body.app-light[data-route="professor"] .acnt,
+body.app-light[data-route="professor"] .rklist,
+body.app-light[data-route="aluno"] .jcard,
+body.app-light[data-route="aluno"] .page-guide,
+body.app-light[data-route="aluno"] .waiting-card,
+body.app-light[data-route="aluno"] .winfo,
+body.app-light[data-route="aluno"] .pqtxt,
+body.app-light[data-route="aluno"] .live-rank-shell,
+body.app-light[data-route="aluno"] .pres,
+body.app-light[data-route="aluno"] .question-meta-student,
+body.app-light[data-route="aluno"] .rklist,
+body.app-light[data-route="aluno"] .section-banner {
+  color:#12344b !important;
+}
+
+body.app-light[data-route="professor"] .inp,
+body.app-light[data-route="professor"] .cf select,
+body.app-light[data-route="professor"] .cf input[type=text],
+body.app-light[data-route="professor"] .qinp,
+body.app-light[data-route="professor"] .oi,
+body.app-light[data-route="professor"] .csel,
+body.app-light[data-route="aluno"] .inp {
+  background:#f7fcff !important;
+  color:#12344b !important;
+  border-color:rgba(36,120,157,.16) !important;
+}
+
+body.app-light[data-route="professor"] .tabs,
+body.app-light[data-route="professor"] .tab {
+  background:transparent;
+}
+
+body.app-light[data-route="professor"] .tabs {
+  background:rgba(255,255,255,.6) !important;
+  border:1px solid rgba(36,120,157,.12) !important;
+}
+
+body.app-light[data-route="professor"] .tab {
+  color:#547286 !important;
+}
+
+body.app-light[data-route="professor"] .tab.on {
+  background:rgba(56,189,248,.14) !important;
+  color:#143750 !important;
+}
+
+@media(max-width:820px){
+  body.app-light[data-route="professor"] .sw,
+  body.app-light[data-route="professor"] .lob,
+  body.app-light[data-route="professor"] .app-flow-shell,
+  body.app-light[data-route="professor"] .app-center-shell,
+  body.app-light[data-route="aluno"] .app-center-shell {
+    width:min(100% - 20px, 1120px);
+  }
+}
+
+body.home-body .home-hero {
+  display:grid !important;
+  grid-template-columns:minmax(0, 1fr) !important;
+  gap:24px !important;
+}
+
+body.home-body .home-hero-copy {
+  max-width:820px;
+}
+
+body.home-body .home-cta {
+  display:grid !important;
+  grid-template-columns:repeat(2, minmax(0, 1fr)) !important;
+  gap:18px !important;
+  align-items:stretch !important;
+}
+
+body.home-body .home-card {
+  min-height:280px !important;
+  justify-content:flex-start !important;
+  border-radius:30px !important;
+  padding:28px !important;
+}
+
+body.home-body .home-card-icon {
+  width:54px !important;
+  height:54px !important;
+  border-radius:18px !important;
+  font-size:1rem !important;
+  letter-spacing:.06em;
+}
+
+body.home-body .home-card strong {
+  font-size:1.8rem !important;
+  line-height:1.15 !important;
+}
+
+body.home-body .home-card small {
+  max-width:30ch;
+  font-size:.98rem !important;
+}
+
+body.home-body .home-card-action {
+  margin-top:auto !important;
+  padding-top:28px !important;
+}
+
+body.home-body[data-route="aluno"] .app-center-shell,
+body.home-body[data-route="aluno"] .app-page-shell {
+  width:min(1120px, calc(100% - 36px)) !important;
+  margin:0 auto !important;
+}
+
+body.home-body[data-route="aluno"] .jlogo {
+  margin-top:8px;
+  margin-bottom:4px;
+}
+
+body.home-body[data-route="aluno"] .jcard {
+  max-width:560px !important;
+  width:100% !important;
+  border-radius:34px !important;
+  padding:28px !important;
+}
+
+body.home-body[data-route="aluno"] .page-guide,
+body.home-body[data-route="aluno"] .waiting-card,
+body.home-body[data-route="aluno"] .winfo,
+body.home-body[data-route="aluno"] .pqtxt,
+body.home-body[data-route="aluno"] .live-rank-shell,
+body.home-body[data-route="aluno"] .pres,
+body.home-body[data-route="aluno"] .question-meta-student,
+body.home-body[data-route="aluno"] .rklist,
+body.home-body[data-route="aluno"] .section-banner {
+  border-radius:28px !important;
+}
+
+body.home-body[data-route="aluno"] .tb {
+  display:grid !important;
+  grid-template-columns:auto 1fr auto !important;
+  width:100% !important;
+  margin:0 !important;
+  position:sticky !important;
+  top:0 !important;
+  z-index:40 !important;
+}
+
+body.home-body[data-route="aluno"] .home-floating {
+  display:none !important;
+}
+
+@media(max-width:900px){
+  body.home-body .home-cta {
+    grid-template-columns:1fr !important;
+  }
 }
