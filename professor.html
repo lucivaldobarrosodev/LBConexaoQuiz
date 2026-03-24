@@ -1,10 +1,14 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Painel do professor do LB Conexão Quiz para criar salas, montar quizzes, acompanhar respostas e exportar resultados.">
+  <meta name="author" content="Lucivaldo Oliveira Barroso">
+  <meta name="robots" content="index, follow">
+  <meta name="theme-color" content="#06080f">
   <title>LB Conexão Quiz - Professor</title>
-  <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Sora:wght@600;700;800&display=swap" rel="stylesheet">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
   <link rel="stylesheet" href="style.css">
 </head>
@@ -16,17 +20,28 @@
   <div class="orb orb3"></div>
 </div>
 
-<div class="ovl" id="loader"><div class="spin"></div><p id="lmsg">Aguarde…</p></div>
+<div class="ovl" id="loader"><div class="spin"></div><p id="lmsg">Aguarde...</p></div>
 <div class="tst" id="toast"></div>
 
 <div id="ss" class="scr on">
   <div class="tb">
+    <a class="btn btn-ghost btn-sm home-back" href="index.html">Home</a>
     <div class="logo">LB Conexão Quiz</div>
     <div class="rt-badge"><span class="rt-dot"></span> Supabase</div>
   </div>
   <div class="sw">
     <div class="ph">Monte seu quiz ao vivo</div>
     <div class="ps">Crie uma sala, carregue um banco salvo e acompanhe a turma em tempo real.</div>
+    <div class="page-guide">
+      <h3>Orientações do professor</h3>
+      <p>Organize o quiz com calma antes de abrir a sala.</p>
+      <ul>
+        <li>Defina um nome claro para o quiz.</li>
+        <li>Revise perguntas, alternativas e tempo por questão.</li>
+        <li>Use banco salvo quando quiser reaproveitar atividades.</li>
+        <li>Ao final, exporte o relatório para acompanhar o desempenho.</li>
+      </ul>
+    </div>
 
     <div class="tabs">
       <button class="tab on" id="tab-new" onclick="switchTab('new')">Novo Quiz</button>
@@ -81,7 +96,7 @@
     </div>
 
     <div id="panel-saved" style="display:none">
-      <div class="empty" id="bank-empty">Carregando…</div>
+      <div class="empty" id="bank-empty">Carregando...</div>
       <div class="blist" id="blist"></div>
     </div>
   </div>
@@ -89,15 +104,16 @@
 
 <div id="slob" class="scr">
   <div class="tb">
+    <a class="btn btn-ghost btn-sm home-back" href="index.html">Home</a>
     <div class="logo">LB Conexão Quiz</div>
-    <div id="lob-nm" style="font-family:'Fredoka One',cursive;color:var(--muted);font-size:.85rem;"></div>
+    <div id="lob-nm" style="font-family:'Sora',sans-serif;color:var(--muted);font-size:.85rem;"></div>
     <button class="btn btn-green" onclick="adminStart()">Iniciar</button>
   </div>
   <div class="lob">
     <div class="lob-l">
       <div class="pin-box">
         <div class="pin-lbl">PIN da Sala</div>
-        <div class="pin-val" id="lpin">——</div>
+        <div class="pin-val" id="lpin">--</div>
       </div>
       <div class="qr-box">
         <div class="qr-lbl">Alunos entram por aqui</div>
@@ -107,7 +123,7 @@
     </div>
     <div class="lob-r">
       <h3><span class="rt-dot"></span> Ao vivo na sala</h3>
-      <div class="pcnt" id="pcnt">Aguardando alunos…</div>
+      <div class="pcnt" id="pcnt">Aguardando alunos...</div>
       <div class="pwrap" id="pwrap"></div>
     </div>
   </div>
@@ -115,6 +131,7 @@
 
 <div id="sqadm" class="scr">
   <div class="tb" style="flex-shrink:0">
+    <a class="btn btn-ghost btn-sm home-back" href="index.html">Home</a>
     <div class="logo">LB Conexão Quiz</div>
     <div class="acnt" id="acnt">0 resp.</div>
     <div style="display:flex;gap:5px">
@@ -132,7 +149,7 @@
       <div class="tmr-n" id="tnum">20</div>
     </div>
   </div>
-  <div class="qbbl"><h2 id="qtxt">Carregando…</h2></div>
+  <div class="qbbl"><h2 id="qtxt">Carregando...</h2></div>
   <div class="ag">
     <button class="abtn A" id="ab-A"><span class="aico">▲</span><span class="atxt" id="at-A"></span><span class="acn" id="ac-A">0</span><span class="abar" id="abar-A"></span></button>
     <button class="abtn B" id="ab-B"><span class="aico">●</span><span class="atxt" id="at-B"></span><span class="acn" id="ac-B">0</span><span class="abar" id="abar-B"></span></button>
@@ -142,6 +159,7 @@
 </div>
 
 <div id="srnk" class="scr">
+  <a class="btn btn-ghost btn-sm home-floating" href="index.html">Home</a>
   <div class="rkh"><h2>Ranking</h2><p id="rksub"></p></div>
   <div class="rklist" id="rklist"></div>
   <button class="btn btn-acc" id="btn-rknxt" onclick="adminCont()" style="display:none">Próxima Pergunta</button>
@@ -149,6 +167,7 @@
 </div>
 
 <div id="sfin" class="scr">
+  <a class="btn btn-ghost btn-sm home-floating" href="index.html">Home</a>
   <div style="font-size:2.6rem;animation:float 2s ease-in-out infinite">🎊</div>
   <div class="fin-t">Fim de Jogo!</div>
   <div class="fin-s" id="fins"></div>
